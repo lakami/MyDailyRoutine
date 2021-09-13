@@ -1,0 +1,34 @@
+server:
+  port: 5001
+spring:
+  mail:
+    host: localhost
+    port: 1025
+    username: hello
+    password: hello
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+  datasource:
+    url: jdbc:h2:mem:MyDailyRoutineDB
+    driverClassName: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      show-sql: true
+  h2:
+    console:
+      enabled: true
+mydailyroutine:
+  token-expiration-minutes: 15
+  mail:
+    from: aaa@op.pl
+    confirmation-url: http://localhost:${server.port}/api/v1/registration/confirm?token=
