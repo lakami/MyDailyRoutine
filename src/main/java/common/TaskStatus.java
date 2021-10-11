@@ -3,7 +3,7 @@ package common;
 public enum TaskStatus {
     TODO("To do"),
     INPROGRESS("In progress"),
-    COMPLITE("Complite");
+    COMPLETE("Complete");
 
     private final String message;
 

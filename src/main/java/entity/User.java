@@ -7,10 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 public class User implements UserDetails {
@@ -20,21 +17,35 @@ public class User implements UserDetails {
     @Type(type = "uuid-char")
     @Column(unique = true, nullable = false)
     private UUID id;
+
     @Column(nullable = false, unique = true)
     private String login;
+
     @Column(nullable = false)
     private String username;
+
     @Column(nullable = false)
     private String email;
+
     @Column(nullable = false)
     private String password;
+
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
+
     @Column(nullable = false)
     private Boolean locked = false;
+
     @Column(nullable = false)
     private Boolean enabled = false;
+
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.DETACH)
+    private List<Task> createdTasks;
+
+    @OneToMany(mappedBy = "assignee", cascade = CascadeType.DETACH)
+    private List<Task> assignedTasks;
+
 
     public User() {
     }
@@ -50,6 +61,16 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.userRole = userRole;
+        this.createdTasks = new ArrayList<>();
+        this.assignedTasks = new ArrayList<>();
+    }
+
+    public void addNewCreatedTask(Task task){
+        createdTasks.add(task);
+    }
+
+    public void addNewAsignedTask(Task task){
+        assignedTasks.add(task);
     }
 
     @Override
@@ -57,6 +78,23 @@ public class User implements UserDetails {
         SimpleGrantedAuthority authority= new SimpleGrantedAuthority(userRole.name());
         return Collections.singletonList(authority);
     }
+
+    public List<Task> getCreatedTasks(){
+        return createdTasks;
+    }
+
+    public void setCreatedTasks(List<Task> createdTasks){
+        this.createdTasks = createdTasks;
+    }
+
+    public List<Task> getAssignedTasks(){
+        return assignedTasks;
+    }
+
+    public void setAssignedTasks(List<Task> assignedTasks){
+        this.assignedTasks = assignedTasks;
+    }
+
 
     @Override
     public String getPassword() {
